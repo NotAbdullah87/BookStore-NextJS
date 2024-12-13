@@ -1,34 +1,34 @@
 // pages/books/index.js
-import { useState, useEffect } from 'react'
-import { useRouter } from 'next/router'
-import Layout from '../../components/Layout'
-import BookCard from '../../components/BookCard'
-import data from '../../data.json'
+
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
+import Layout from '../../components/Layout';
+import BookCard from '../../components/BookCard';
 
 export default function Books({ books, genres }) {
-  const router = useRouter()
-  const { genre: genreId } = router.query
-  const [filteredBooks, setFilteredBooks] = useState(books)
-  const [currentGenre, setCurrentGenre] = useState('')
+  const router = useRouter();
+  const { genre: genreId } = router.query;
+  const [filteredBooks, setFilteredBooks] = useState(books);
+  const [currentGenre, setCurrentGenre] = useState('');
 
   useEffect(() => {
     if (genreId) {
-      setFilteredBooks(books.filter(book => book.genreId === genreId))
-      setCurrentGenre(genreId)
+      setFilteredBooks(books.filter(book => book.genreId === genreId));
+      setCurrentGenre(genreId);
     } else {
-      setFilteredBooks(books)
-      setCurrentGenre('')
+      setFilteredBooks(books);
+      setCurrentGenre('');
     }
-  }, [genreId, books])
+  }, [genreId, books]);
 
   const handleGenreChange = (e) => {
-    const selectedGenre = e.target.value
+    const selectedGenre = e.target.value;
     if (selectedGenre) {
-      router.push(`/books?genre=${selectedGenre}`)
+      router.push(`/books?genre=${selectedGenre}`);
     } else {
-      router.push('/books')
+      router.push('/books');
     }
-  }
+  };
 
   return (
     <Layout>
@@ -59,14 +59,22 @@ export default function Books({ books, genres }) {
         </div>
       )}
     </Layout>
-  )
+  );
 }
 
 export async function getServerSideProps() {
+  const booksRes = await fetch(`http://localhost:3000/api/books`);
+  const books = await booksRes.json();
+
+  console.log(books.books)
+
+  const genresRes = await fetch(`http://localhost:3000/api/genres`);
+  const genres = await genresRes.json();
+
   return {
     props: {
-      books: data.books,
-      genres: data.genres,
+      books: books.books,
+      genres: genres.genres,
     },
-  }
+  };
 }

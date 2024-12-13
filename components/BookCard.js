@@ -8,7 +8,7 @@ export default function BookCard({ book }) {
       {/* <p className="text-gray-600 dark:text-gray-300 mb-4">{book.description.substring(0, 100)}...</p> */}
       <div className="flex justify-between items-center">
         <div>
-        <span className="text-indigo-600 dark:text-indigo-400 font-medium">${book.price.toFixed(2)}</span>
+        <span className="text-indigo-600 dark:text-indigo-400 font-medium">${book.price}</span>
         <span className='text-yellow-600 ml-5 dark:text-indigo-400 font-medium'>⭐ {book.rating}</span>
         </div>
         <Link legacyBehavior href={`/books/${book.id}`}>

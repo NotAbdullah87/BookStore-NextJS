@@ -2,7 +2,6 @@
 
 import { createConnection } from 'mysql2/promise';
 import jwt from 'jsonwebtoken';
-import bcrypt from 'bcryptjs';
 import dotenv from 'dotenv';
 
 dotenv.config();
