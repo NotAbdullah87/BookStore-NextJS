@@ -1,36 +1,231 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# BookStore Application
 
-## Getting Started
+Welcome to the BookStore application! This project is part of the Advanced Programming course at the National University of Computer and Emerging Sciences, Lahore Campus. The application allows users to manage books, genres, authors, and user interactions dynamically. It features a modern UI, user authentication, and backend APIs built with Next.js.
 
-First, run the development server:
+## Table of Contents
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- [Features](#features)
+- [Technologies Used](#technologies-used)
+- [Setup](#setup)
+- [API Endpoints](#api-endpoints)
+- [User Authentication](#user-authentication)
+- [Personalized Content](#personalized-content)
+- [Data Handling](#data-handling)
+- [Routing Strategies](#routing-strategies)
+- [Static Generation](#static-generation)
+- [Server-Side Rendering](#server-side-rendering)
+- [Client-Side Rendering](#client-side-rendering)
+- [Additional Features](#additional-features)
+- [Contributing](#contributing)
+- [License](#license)
+
+## Features
+
+- **User Authentication:** Secure login and logout functionality.
+- **Dynamic Data Handling:** Fetch and display books, genres, authors, and user history.
+- **Personalized Content:** Display user-specific information and search history.
+- **Responsive UI:** Modern and visually appealing design using Tailwind CSS.
+- **Backend APIs:** Manage data dynamically with Next.js API routes.
+- **Comprehensive Book Management:** Browse, search, and view detailed information about books, categories, and authors.
+- **Dark Mode Toggle:** Switch between light and dark themes.
+- **Search History:** Store and display recent searches using local storage and API.
+
+## Technologies Used
+
+- **Frontend:** Next.js | Tailwind CSS
+- **Backend:** Next.js API routes
+- **Database:** MySQL
+- **Authentication:** useContext hook for session management
+
+## Setup
+
+### Prerequisites
+
+- Node.js and npm/yarn installed
+- MySQL
+
+### Installation
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/yourusername/bookstore-app.git
+   cd bookstore-app
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   # or
+   yarn install
+   ```
+
+3. Set up environment variables:
+   Create a `.env` file in the root directory and add your database connection details and other environment variables.
+
+4. Start the development server:
+   ```bash
+   npm run dev
+   # or
+   yarn dev
+   ```
+
+5. Open your browser and navigate to `http://localhost:3000` to see the application in action.
+
+## API Endpoints
+
+### Authentication APIs
+
+- **Login API:**
+  - **Endpoint:** `POST /api/auth/login`
+  - **Description:** Authenticates the user and returns a token.
+
+- **Logout API:**
+  - **Endpoint:** `POST /api/auth/logout`
+  - **Description:** Ends the user's session.
+
+### Books API
+
+- **Get All Books:**
+  - **Endpoint:** `GET /api/books`
+  - **Description:** Fetches a list of all books.
+
+- **Get Book Details:**
+  - **Endpoint:** `GET /api/books/[id]`
+  - **Description:** Fetches detailed information for a specific book.
+
+### Genres API
+
+- **Get All Genres:**
+  - **Endpoint:** `GET /api/genres`
+  - **Description:** Fetches a list of all genres.
+
+- **Get Books by Genre:**
+  - **Endpoint:** `GET /api/genres/[id]/books`
+  - **Description:** Fetches books belonging to a specific genre.
+
+### Authors API
+
+- **Get All Authors:**
+  - **Endpoint:** `GET /api/authors`
+  - **Description:** Fetches a list of all authors.
+
+- **Get Author Details:**
+  - **Endpoint:** `GET /api/authors/[id]`
+  - **Description:** Fetches details of a specific author, including their books.
+
+### User History API
+
+- **Get Search History:**
+  - **Endpoint:** `GET /api/user/history`
+  - **Description:** Retrieves the user's search history.
+
+- **Add Search Query:**
+  - **Endpoint:** `POST /api/user/history`
+  - **Description:** Adds a new query to the user's search history.
+
+## User Authentication
+
+User authentication is managed using the `useContext` hook. The `AuthContext` provides login, logout, and user values. The application is wrapped with the `AuthContext.Provider` in `_app.js` to make the authentication state accessible throughout the app.
+
+## Personalized Content
+
+- **Restricted Access:** Author details and book details pages are accessible only to logged-in users.
+- **Search History:** Logged-in users can view and manage their search history.
+- **Personalized Homepage:** Displays the user's email and a logout button when logged in.
+
+## Data Handling
+
+- Use a JSON file `books.json` to store information about books, genres, and authors.
+- Each book should include properties like `id`, `title`, `author`, `description`, `price`, `genre`, and `rating`.
+- Each genre should have an `id` and `name`.
+- Each author should include `id`, `name`, and `biography`.
+
+## Routing Strategies
+
+### Home Page (index.js)
+
+- Create a homepage that displays a list of featured books with a "View Genres" button.
+- Use programmatic navigation (e.g., `router.push()`) to navigate to the genres page when the button is clicked.
+
+### Dynamic Routes
+
+- Implement dynamic routes for individual book details (`/books/[id]`), showing the book's details based on the `id` parameter from the JSON file.
+- Use `getStaticPaths()` to generate paths for these dynamic routes and `getStaticProps()` to prerender book pages.
+
+### Nested Routes
+
+- Include nested routes within the book details page for author information (e.g., `/books/[id]/author`).
+
+### Catch-All Routes
+
+- Create a catch-all route for information pages (e.g., `/info/[...slug]`) to handle multiple levels of routing for sections like FAQs or support. Examples:
+  - `/info`
+  - `/info/faqs`
+  - `/info/support`
+
+### Custom 404 Page
+
+- Implement a custom `404.js` page to display a user-friendly error message when a page is not found.
+
+## Static Generation (SSG)
+
+- Use `getStaticProps()` to generate the book list page statically.
+- Include the `revalidate` key in `getStaticProps()` to implement Incremental Static Regeneration (ISR) for periodic updates of static pages.
+- Use the `notFound` key to handle cases where book data is unavailable.
+
+### Static Generation with Dynamic Routes
+
+- Use `getStaticPaths()` and `getStaticProps()` to statically generate pages for individual books.
+- Implement the `fallback` key to handle dynamic book pages that are not pre-generated.
+
+## Server-Side Rendering (SSR)
+
+- Create a page for book genres using `getServerSideProps()` to fetch data at request time.
+
+## Client-Side Rendering (CSR)
+
+- Use the `useSWR()` hook to fetch data dynamically on the client side, particularly for the list of authors.
+
+## Books Page
+
+- Display a list of all books, with filtering options by genre.
+- Each book card should have a "View Details" button that links to the dynamic book page.
+
+## Book Details Page
+
+- Show full book details, including the title, description, author, price, and rating.
+- Provide a nested route to display detailed information about the book's author.
+
+## Genres Page
+
+- Show a list of book genres, each linking to a filtered list of books in that genre.
+
+## Authors Page
+
+- Display a list of authors using CSR with the `useSWR()` hook for dynamic data fetching.
+
+## Additional Features
+
+- Implement a dark mode toggle for the application, allowing users to switch between light and dark themes.
+- Store user search history using local storage and display recent searches on the search page.
+
+## Contributing
+
+Contributions are welcome! Please follow these steps:
+
+1. Fork the repository.
+2. Create a new branch (`git checkout -b feature-branch`).
+3. Commit your changes (`git commit -am 'Add some feature'`).
+4. Push to the branch (`git push origin feature-branch`).
+5. Create a new Pull Request.
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
+
+---
+
+Made with ❤️ by [Abdullah Shakir]([https://github.com/yourusername](https://github.com/NotAbdullah87))
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+This README provides a comprehensive overview of your project, including features, technologies used, setup instructions, API endpoints, user authentication, personalized content, data handling, routing strategies, static generation, server-side rendering, client-side rendering, additional features, contributing guidelines, and licensing information. Customize the placeholders (e.g., `yourusername`, `your name`) with your actual details before using it.
