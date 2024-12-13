@@ -2,11 +2,13 @@
 
 import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { useRouter } from 'next/router';
 
 const LoginForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const { login } = useAuth();
+  const router = useRouter();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -23,6 +25,7 @@ const LoginForm = () => {
 
     if (response.ok) {
       login(data.token,data.name);
+      router.push('/')
     } else {
       alert(data.message);
     }

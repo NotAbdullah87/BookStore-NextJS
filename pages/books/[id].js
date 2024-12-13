@@ -2,15 +2,25 @@ import { useRouter } from 'next/router';
 import Layout from '@/components/Layout';
 import data from '../../Data.json';
 import Link from 'next/link';
+import { useAuth } from '../context/AuthContext';
+import { useEffect } from 'react';
 
 
 export default function BookDetails({ book }) {
   const router = useRouter();
 
+  const {token} = useAuth();
 
   if (router.isFallback) {
     return <p className="text-center text-gray-500">Loading...</p>;
   }
+
+  useEffect(()=>{
+
+    if(!token){
+      router.push('/login')
+    }
+  },[router,token])
 
   return (
     <Layout>
@@ -54,3 +64,4 @@ export async function getStaticProps({ params }) {
     revalidate: 10,
   };
 }
+

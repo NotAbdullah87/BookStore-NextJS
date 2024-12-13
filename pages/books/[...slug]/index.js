@@ -1,5 +1,7 @@
 import Layout from '@/components/Layout';
+import { useAuth } from '@/pages/context/AuthContext';
 import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 import useSWR from 'swr';
 
 const fetcher = (url) => fetch(url).then((res) => res.json());
@@ -7,8 +9,23 @@ const fetcher = (url) => fetch(url).then((res) => res.json());
 const BookDetail = () => {
   const router = useRouter();
   const { slug } = router.query;
+  const {token} = useAuth();
 
-  const { data, error } = useSWR('/api/authors', fetcher);
+  useEffect(() => {
+    // Redirect to login if the user is not authenticated
+    console.log("HERE")
+   
+    if (!token) {
+      router.replace('/login');
+    }
+  }, [router, token]);
+
+  const { data, error } = useSWR(token ? '/api/authors' : null, fetcher);
+
+  // Show a loading state until the token is verified
+  if (!token) {
+    return null; // Render nothing while redirecting
+  }
 
   if (!data && !error) return <p>Loading...</p>;
   if (error) return <p>Failed to load data.</p>;

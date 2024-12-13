@@ -12,8 +12,9 @@ export default function Books({ books, genres }) {
   const [currentGenre, setCurrentGenre] = useState('');
 
   useEffect(() => {
+ 
     if (genreId) {
-      setFilteredBooks(books.filter(book => book.genreId === genreId));
+      setFilteredBooks(books.filter(book => book.genreId.toString() === genreId.toString()));
       setCurrentGenre(genreId);
     } else {
       setFilteredBooks(books);
@@ -66,11 +67,10 @@ export async function getServerSideProps() {
   const booksRes = await fetch(`http://localhost:3000/api/books`);
   const books = await booksRes.json();
 
-  console.log(books.books)
+  // console.log(books.books)
 
   const genresRes = await fetch(`http://localhost:3000/api/genres`);
   const genres = await genresRes.json();
-
   return {
     props: {
       books: books.books,

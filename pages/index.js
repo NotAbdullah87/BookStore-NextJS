@@ -17,7 +17,7 @@ export default function Home({ books }) {
   return (
     <Layout>
       <h1 className="text-4xl font-bold text-gray-800 dark:text-white mb-8">Welcome to Book Store <span className='italic text-gray-500 font-medium'>{name}</span></h1>
-      {token && <>
+
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         {featuredBooks.map(book => (
           <BookCard key={book.id} book={book} />
@@ -29,10 +29,8 @@ export default function Home({ books }) {
       >
         View Genres
       </button>
-      </>
-      }
-
-      {!token && <LoginForm />}
+      
+    
     </Layout>
   )
 }

@@ -2,6 +2,8 @@
 import Link from 'next/link'
 import "../styles/globals.css"
 export default function BookCard({ book }) {
+
+ 
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow duration-300">
       <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-2">{book.title}</h2>
