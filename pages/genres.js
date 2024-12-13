@@ -17,9 +17,15 @@ export default function Genres({ genres }) {
 }
 
 export async function getStaticProps() {
+
+   // console.log(books.books)
+
+   const genresRes = await fetch(`http://localhost:3000/api/genres`);
+   const genres = await genresRes.json();
+
   return {
     props: {
-      genres: data.genres,
+      genres: genres.genres,
     },
     revalidate: 60,
   }

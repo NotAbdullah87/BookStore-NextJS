@@ -36,9 +36,13 @@ export default function Home({ books }) {
 }
 
 export async function getStaticProps() {
+
+  const booksRes = await fetch(`http://localhost:3000/api/books`);
+  const books = await booksRes.json();
+
   return {
     props: {
-      books: data.books,
+      books: books.books,
     },
     revalidate: 60, // Revalidate every 60 seconds
   }

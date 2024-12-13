@@ -1,21 +1,31 @@
 // pages/authors.js
-import { useState } from 'react'
-import useSWR from 'swr'
-import Layout from '../components/Layout'
-import AuthorCard from '../components/AuthorCard'
+import { useState } from 'react';
+import useSWR from 'swr';
+import Layout from '../components/Layout';
+import AuthorCard from '../components/AuthorCard';
 
-const fetcher = url => fetch(url).then(res => res.json())
+const fetcher = async (url) => {
+  const res = await fetch(url);
+  // console.log("Response status:", res.status);
+  if (!res.ok) {
+    throw new Error("Failed to fetch data");
+  }
+  const json = await res.json();
+  // console.log("Fetched data:", json.authors);
+  return json.authors;
+};
+
 
 export default function Authors() {
-  const { data, error } = useSWR('/api/authors', fetcher)
-  const [searchTerm, setSearchTerm] = useState('')
+  const { data, error } = useSWR('http://localhost:3000/api/authors', fetcher);
+  const [searchTerm, setSearchTerm] = useState('');
 
-  if (error) return <div>Failed to load authors</div>
-  if (!data) return <div>Loading...</div>
+  if (error) return <div>Failed to load authors</div>;
+  if (!data) return <div>Loading...</div>;
 
-  const filteredAuthors = data.filter(author =>
+  const filteredAuthors = data.filter((author) =>
     author.name.toLowerCase().includes(searchTerm.toLowerCase())
-  )
+  );
 
   return (
     <Layout>
@@ -28,10 +38,10 @@ export default function Authors() {
         className="w-full px-3 py-2 mb-6 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
       />
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {filteredAuthors.map(author => (
+        {filteredAuthors.map((author) => (
           <AuthorCard key={author.id} author={author} />
         ))}
       </div>
     </Layout>
-  )
+  );
 }
