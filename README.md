@@ -2,6 +2,11 @@
 
 Welcome to the BookStore application! This project is part of the Advanced Programming course at the National University of Computer and Emerging Sciences, Lahore Campus. The application allows users to manage books, genres, authors, and user interactions dynamically. It features a modern UI, user authentication, and backend APIs built with Next.js.
 
+
+<div align="center">
+  <img src="https://github.com/user-attachments/assets/9dba34b0-ae01-4eff-b16b-1b4bb5f27f59" alt="Demo of the Authors Page" />
+</div>
+
 ## Table of Contents
 
 - [Features](#features)
