@@ -227,5 +227,3 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 Made with ❤️ by [Abdullah Shakir]([https://github.com/yourusername](https://github.com/NotAbdullah87))
 ```
-
-This README provides a comprehensive overview of your project, including features, technologies used, setup instructions, API endpoints, user authentication, personalized content, data handling, routing strategies, static generation, server-side rendering, client-side rendering, additional features, contributing guidelines, and licensing information. Customize the placeholders (e.g., `yourusername`, `your name`) with your actual details before using it.
