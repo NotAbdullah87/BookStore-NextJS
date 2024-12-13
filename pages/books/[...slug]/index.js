@@ -4,7 +4,18 @@ import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import useSWR from 'swr';
 
-const fetcher = (url) => fetch(url).then((res) => res.json());
+
+const fetcher = async (url) => {
+  const res = await fetch(url);
+  // console.log("Response status:", res.status);
+  if (!res.ok) {
+    throw new Error("Failed to fetch data");
+  }
+  const json = await res.json();
+  // console.log("Fetched data:", json.authors);
+  return json.authors;
+};
+
 
 const BookDetail = () => {
   const router = useRouter();
@@ -20,7 +31,7 @@ const BookDetail = () => {
     }
   }, [router, token]);
 
-  const { data, error } = useSWR(token ? '/api/authors' : null, fetcher);
+  const { data, error } = useSWR(token ? 'http://localhost:3000/api/authors' : null, fetcher);
 
   // Show a loading state until the token is verified
   if (!token) {
@@ -33,8 +44,8 @@ const BookDetail = () => {
   if (!slug) return <p>Loading...</p>;
 
   const lastSegment = slug[slug.length - 1];
-  const author = data?.find((i) => i.id === lastSegment);
-
+  const author = data?.find((i) => i.id.toString() === lastSegment.toString());
+  
   if (!author) {
     return <div>Author Not Found</div>;
   }
