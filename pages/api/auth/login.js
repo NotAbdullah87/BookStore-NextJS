@@ -41,7 +41,7 @@ export default async function handler(req, res) {
 
     const token = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
-    res.status(200).json({ token,name : user.name });
+    res.status(200).json({ token,name : user.name, id:user.id });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Internal server error' });

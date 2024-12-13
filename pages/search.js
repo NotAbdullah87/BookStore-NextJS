@@ -1,48 +1,67 @@
-import { useState, useEffect } from 'react'
-import Layout from '../components/Layout'
-import BookCard from '../components/BookCard'
-import data from '../data.json'
+// pages/search.js
+
+import { useState, useEffect } from 'react';
+import Layout from '../components/Layout';
+import BookCard from '../components/BookCard';
+import { useAuth } from './context/AuthContext';
 
 export default function Search({ books }) {
-  const [searchTerm, setSearchTerm] = useState('')
-  const [searchHistory, setSearchHistory] = useState([])
-  const [filteredBooks, setFilteredBooks] = useState(books)
+  const [searchTerm, setSearchTerm] = useState('');
+  const [searchHistory, setSearchHistory] = useState([]);
+  const [filteredBooks, setFilteredBooks] = useState(books);
+  const { token, userId } = useAuth(); // Assuming userId is part of the auth context
 
   useEffect(() => {
-    const storedHistory = localStorage.getItem('searchHistory')
-    if (storedHistory) {
-      setSearchHistory(JSON.parse(storedHistory))
-    }
-  }, [])
+    const fetchSearchHistory = async () => {
+      const response = await fetch(`/api/search-history?userId=${userId}`);
+      const data = await response.json();
+      if (response.ok) {
+        setSearchHistory(data.searchHistory.map(item => item.searchTerm));
+      }
+    };
 
-  const handleSearchSubmit = () => {
+    console.log(userId);
+
+    if (userId) {
+      fetchSearchHistory();
+    }
+  }, [userId]);
+
+  const handleSearchSubmit = async () => {
     if (searchTerm.trim()) {
       const results = books.filter(book =>
         book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         book.description.toLowerCase().includes(searchTerm.toLowerCase())
-      )
-      setFilteredBooks(results)
+      );
+      setFilteredBooks(results);
 
       // Save search term to history if it doesn't already exist
       if (!searchHistory.includes(searchTerm)) {
-        const newHistory = [searchTerm, ...searchHistory].slice(0, 5)
-        setSearchHistory(newHistory)
-        localStorage.setItem('searchHistory', JSON.stringify(newHistory))
+        const newHistory = [searchTerm, ...searchHistory].slice(0, 5);
+        setSearchHistory(newHistory);
+
+        await fetch('/api/search-history', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ userId, searchTerm }),
+        });
       }
     } else {
       // Reset to show all books if search term is empty
-      setFilteredBooks(books)
+      setFilteredBooks(books);
     }
-  }
+  };
 
   const handleHistorySearch = (term) => {
-    setSearchTerm(term)
+    setSearchTerm(term);
     const results = books.filter(book =>
       book.title.toLowerCase().includes(term.toLowerCase()) ||
       book.description.toLowerCase().includes(term.toLowerCase())
-    )
-    setFilteredBooks(results)
-  }
+    );
+    setFilteredBooks(results);
+  };
 
   return (
     <Layout>
@@ -84,14 +103,17 @@ export default function Search({ books }) {
         ))}
       </div>
     </Layout>
-  )
+  );
 }
 
 export async function getStaticProps() {
+  const booksRes = await fetch(`http://localhost:3000/api/books`);
+  const books = await booksRes.json();
+
   return {
     props: {
-      books: data.books,
+      books: books.books,
     },
     revalidate: 60,
-  }
+  };
 }

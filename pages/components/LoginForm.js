@@ -24,7 +24,7 @@ const LoginForm = () => {
     const data = await response.json();
 
     if (response.ok) {
-      login(data.token,data.name);
+      login(data.token,data.name,data.id);
       router.push('/')
     } else {
       alert(data.message);
@@ -32,13 +32,13 @@ const LoginForm = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="px-8 py-6 mt-4 text-left bg-white shadow-lg rounded-lg w-96">
+    <div className="flex items-center -mt-24 justify-center min-h-screen">
+      <div className="px-8 py-6 mt-4 text-left bg-white dark:bg-gray-900 shadow-lg rounded-lg w-96">
         <h3 className="text-2xl font-bold text-center">Login</h3>
         <form onSubmit={handleSubmit}>
           <div className="mt-4">
             <div>
-              <label className="block text-gray-700">Username</label>
+              <label className="block text-gray-700 dark:text-white">Username</label>
               <input
                 type="text"
                 placeholder="Username"
@@ -49,7 +49,7 @@ const LoginForm = () => {
               />
             </div>
             <div className="mt-4">
-              <label className="block text-gray-700">Password</label>
+              <label className="block text-gray-700 dark:text-white">Password</label>
               <input
                 type="password"
                 placeholder="Password"
